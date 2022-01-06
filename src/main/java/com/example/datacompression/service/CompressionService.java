@@ -1,50 +1,48 @@
 package com.example.datacompression.service;
 
-import com.example.datacompression.Constants;
+import com.example.datacompression.model.Result;
 import com.example.datacompression.util.Input;
+import com.google.gson.Gson;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-
-
-import java.io.File;
-import java.io.FileInputStream;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class CompressionService {
+    private RestTemplate restTemplate;
+    private final String apiKey = "API_KEY";
+    private final String type = "objects";
+    private final Integer maxLabels = 20;
+    private final Integer minConfidence = 80;
+    private final String url = "https://imagerecognize.com/api/v2/";
 
-    public byte[] getImage() throws IOException {
-        File file = new File("images/apple.png");
-        FileInputStream fileInputStream = new FileInputStream(file);
-
-        byte[] arr = new byte[(int)file.length()];
-
-        fileInputStream.read(arr);
-
-        fileInputStream.close();
-
-        return arr;
+    public CompressionService(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
     }
 
-    public List<byte[]> getImages() throws IOException{
+    public Result recognize(String path) throws IOException{
 
-        List<String> paths = Input.getPaths(Constants.url1);
-        List<byte[]> result = new ArrayList<>();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
-        for(String path: paths){
-            File file = new File(Constants.url1.concat("/").concat(path));
-            System.out.println(Constants.url1.concat("/").concat(path));
-            FileInputStream fileInputStream = new FileInputStream(file);
+        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+        body.add("apikey", apiKey);
+        body.add("type", type);
+        body.add("file", Input.getTestFile(path));
+        body.add("max_labels", maxLabels);
+        body.add("min_confidence", minConfidence);
 
-            byte[] arr = new byte[(int)file.length()];
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
 
-            fileInputStream.read(arr);
+        String response = restTemplate.postForObject(url, requestEntity, String.class);
 
-            fileInputStream.close();
+        Gson g = new Gson();
 
-            result.add(arr);
-        }
-        return result;
+        return g.fromJson(response, Result.class);
     }
 }

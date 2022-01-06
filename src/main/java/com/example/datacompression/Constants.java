@@ -4,14 +4,15 @@ public abstract class Constants {
     public static String url1 = "images/apple/original";
     public static String url2 = "images/orange/original";
     public static String url3 = "images/strawberry/original";
+    public static String exception = "source (ignore)";
 
-    public static String[] url = {
+    public static String[] url0 = {
             "images/apple/jpg_compressed",
             "images/orange/jpg_compressed",
             "images/strawberry/jpg_compressed"
     };
 
-    public static String[] url0 = {
+    public static String[] url = {
             "images/apple/original",
             "images/orange/original",
             "images/strawberry/original"
@@ -24,8 +25,6 @@ public abstract class Constants {
     };
 
     public static String[] offset = {
-            "-200",
-            "-175",
             "-150",
             "-125",
             "-100",
@@ -37,14 +36,10 @@ public abstract class Constants {
             "75",
             "100",
             "125",
-            "150",
-            "175",
-            "200"
+            "150"
     };
 
     public static String[] factor = {
-            "0.0",
-            "0.25",
             "0.5",
             "0.75",
             "1.25",
@@ -56,8 +51,6 @@ public abstract class Constants {
             "2.75",
             "3",
             "3.25",
-            "3.5",
-            "3.75",
-            "4",
+            "3.5"
     };
 }

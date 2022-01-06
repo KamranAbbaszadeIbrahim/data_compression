@@ -1,29 +1,29 @@
 package com.example.datacompression.controller;
 
-import com.example.datacompression.service.CompressionService;
+import com.example.datacompression.Constants;
+import com.example.datacompression.service.ResponseHandler;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.List;
 
 @RestController
 @RequestMapping
 public class CompressionController {
-    private final CompressionService compressionService;
+    private final ResponseHandler handler;
 
-    public CompressionController(CompressionService compressionService) {
-        this.compressionService = compressionService;
+    public CompressionController(ResponseHandler handler) {
+        this.handler = handler;
+    }
+
+    @GetMapping
+    public String test() throws IOException{
+        try{
+           handler.handle(Constants.out[2]);
+           return "OK";
+        }catch (Exception e){
+            return e.getMessage();
+        }
     }
 
 
-    @GetMapping("/image")
-    public @ResponseBody byte[] getImage() throws IOException {
-        return compressionService.getImage();
-    }
-
-
-    @GetMapping("/data")
-    public List<byte[]> getImages() throws IOException {
-        return compressionService.getImages();
-    }
 }
